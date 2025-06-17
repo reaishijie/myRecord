@@ -151,12 +151,13 @@ const login = async (req, res) => {
     }
 }
 
-//令牌刷新接口
+// 令牌刷新接口
 const refreshToken = async (req, res) => {
-    try{
+    try{console.log(req.cookies)
         // 从cookie中获取refreshToken，而不是请求体
         const refreshToken = req.cookies.refreshToken;
         
+
         if(!refreshToken){
             return res.status(401).json(responseFormat(401, '未提供刷新令牌', null))
         }
@@ -230,6 +231,18 @@ const refreshToken = async (req, res) => {
         res.status(500).json(responseFormat(500, '服务器错误', null))
     }
 }
+
+// const refreshToken = async (req, res) => {
+//     try {
+//         console.log('@@@',req.cookies)
+//         console.log('!!!',req.cookie)
+//         res.status(200).json('keyi')
+//     }
+//     catch(error){
+//         console.log(error)
+//     }
+// }
+
 
 // 用户登出
 const logout = async (req, res) => {
