@@ -1,0 +1,21 @@
+{
+  "name": "record",
+  "version": "1.0.0",
+  "description": "record anything you might need to recall.",
+  "main": "index.js",
+  "scripts": {
+    "start": "concurrently \"npm run server\" \"npm run index\"",
+    "server": "cd backend & nodemon src/server.js",
+    "index": "cd frontend & npm run dev"
+  },
+  "keywords": [
+    "record",
+    "nodebook",
+    "recall"
+  ],
+  "author": "486",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
