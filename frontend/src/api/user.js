@@ -31,6 +31,19 @@ const getUserProfile = async() => {
         throw error
     }
 }
+
+//刷新token
+const refreshToken = async() => {
+    try {
+        const result = await service.post('/refreshToken')
+        console.log('refreshToken返回的result是：' , result)
+        //这里返回的result是一个对象，data包含code、message、data,data.token是我们所需的
+        return result.data.data.token
+    } catch (error) {
+        throw error
+    }
+}
+
 // 退出
 const logout = async() => {
     try {
@@ -46,4 +59,4 @@ const logout = async() => {
     }
 }
 
-export { register, login, getUserProfile, logout }
+export { register, login, getUserProfile, refreshToken, logout }

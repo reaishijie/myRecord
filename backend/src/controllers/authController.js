@@ -111,7 +111,7 @@ const login = async (req, res) => {
         const token = jwt.sign(
             {userId: user.id, username: user.username,role: user.role, status:user.status, tokenVersion},
             process.env.JWT_SECRET,
-            {expiresIn: '15m'}
+            {expiresIn: '5m'}
         )
         //生成长期refreshToken
         const refreshToken = jwt.sign(
@@ -153,9 +153,14 @@ const login = async (req, res) => {
 
 // 令牌刷新接口
 const refreshToken = async (req, res) => {
-    try{console.log(req.cookies)
+    console.log('@@@@@@@', '即将进行token刷新')
+    try{
+        console.log('3请求的req.cookies：',req.cookies)
+
         // 从cookie中获取refreshToken，而不是请求体
         const refreshToken = req.cookies.refreshToken;
+
+        console.log('refreshToken是', refreshToken)
         
 
         if(!refreshToken){
@@ -202,7 +207,6 @@ const refreshToken = async (req, res) => {
             process.env.JWT_SECRET,
             {expiresIn: '15m'}
         )
-        
         // 生成新的refreshToken
         const newRefreshToken = jwt.sign(
             {userId: user.id, username: user.username, tokenVersion: newTokenVersion, type: 'refresh'},
@@ -218,7 +222,7 @@ const refreshToken = async (req, res) => {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'strict',
-            maxAge: 30 * 24 * 60 * 60 * 1000 // 7天有效期
+            maxAge: 30 * 24 * 60 * 60 * 1000 // 30天有效期
         });
         
         // 只返回新的accessToken，不返回refreshToken
@@ -231,18 +235,6 @@ const refreshToken = async (req, res) => {
         res.status(500).json(responseFormat(500, '服务器错误', null))
     }
 }
-
-// const refreshToken = async (req, res) => {
-//     try {
-//         console.log('@@@',req.cookies)
-//         console.log('!!!',req.cookie)
-//         res.status(200).json('keyi')
-//     }
-//     catch(error){
-//         console.log(error)
-//     }
-// }
-
 
 // 用户登出
 const logout = async (req, res) => {
@@ -306,7 +298,7 @@ const getUserProfile = async (req, res) => {
             lastLoginTime: user.lastLoginTime,
             status: user.status
         }
-        console.log(userInfo);
+        console.log('userInfo：+00',userInfo);
         
         //返回用户信息
         res.json(responseFormat(200, '获取成功', userInfo))

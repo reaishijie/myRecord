@@ -41,6 +41,7 @@ const authMiddleware = async (req, res, next) => {
         }
         //将解码后的用户信息添加到请求对象req中
         req.user = decoded
+        console.log("@@@@@@", req.user)
         next()
     } catch(error) {
         //令牌过期

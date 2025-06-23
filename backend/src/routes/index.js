@@ -3,14 +3,17 @@ const router = express.Router()
 import bcrypt, { hash } from 'bcryptjs'
 import { register, login, getUserProfile, refreshToken, logout, logoutAllDevices } from "../controllers/authController.js"
 import { authMiddleware } from "../middleware/authMiddleware.js"
-import { strictAuthMiddleware } from "../middleware/strictAuthMiddleware.js"
 import { rateLimitMiddleware } from "../middleware/rateLimitMiddleware.js"
 
-router.post('/register', rateLimitMiddleware(100, 15 * 60 * 1000), register)
-router.post('/login', rateLimitMiddleware(50, 15 * 60 * 1000), login)
-router.post('/refreshToken', rateLimitMiddleware(100, 15 * 60 * 1000), refreshToken)
+// router.post('/register', rateLimitMiddleware(100, 15 * 60 * 1000), register)
+// router.post('/login', rateLimitMiddleware(50, 15 * 60 * 1000), login)
+// router.post('/refreshToken', rateLimitMiddleware(100, 15 * 60 * 1000), refreshToken)
+
+router.post('/register', register)
+router.post('/login', login)
+router.post('/refreshToken', refreshToken)
 router.post('/logout', authMiddleware, logout)
-router.post('/logout-all', strictAuthMiddleware, logoutAllDevices)
+router.post('/logout-all', authMiddleware, logoutAllDevices)
 router.get('/profile', authMiddleware, getUserProfile)
 
 
