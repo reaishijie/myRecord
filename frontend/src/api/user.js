@@ -5,8 +5,6 @@ import { clearAuth } from '../utils/auth';
 const register = async (userInfo) => {
     try {
         const result = await service.post('/register', userInfo)
-        console.log('result@@@',result)
-
         return result.data
     } catch(error){
         throw error
@@ -16,7 +14,6 @@ const register = async (userInfo) => {
 const login = async(userInfo) => {
     try{
         const result = await service.post('/login', userInfo)
-        console.log('result@@@',result)
         return result.data
     } catch(error) {
         throw error
@@ -36,8 +33,8 @@ const getUserProfile = async() => {
 const refreshToken = async() => {
     try {
         const result = await service.post('/refreshToken')
-        console.log('refreshToken返回的result是：' , result)
         //这里返回的result是一个对象，data包含code、message、data,data.token是我们所需的
+        //将token直接进行返回
         return result.data.data.token
     } catch (error) {
         throw error

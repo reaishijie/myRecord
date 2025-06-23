@@ -31,15 +31,10 @@ service.interceptors.response.use(
     return response
   },
   async error => {
-    console.log('error@@', error)
-    console.log('error.config@@', error.config)
-    // const originalRequest = error.config
-
     if (error.response.status === 401 && error.response.data.code === 401 && error.response.data.message === '令牌已过期') {
       try {
         const token = await refreshToken()
         localStorage.setItem('token', token)
-        console.log('token!!!:', token)
         //将token替换后重新请求
         error.config.headers['Authorization'] = 'Bearer ' + token;
         return service(error.config)
