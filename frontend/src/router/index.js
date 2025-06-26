@@ -4,16 +4,16 @@ import { showSuccess } from "../utils/message"
 const routes = [
     {
         path: '/',
-        alias: '/a',
+        alias: '/index',
         name: 'index',
         component: () => import ("../views/Index.vue"),
         meta: {title: '首页'}
     },
     {
-        path: '/demo',
+        path: '/loading',
         alias: '/test',
-        name: 'demo',
-        component: () => import ("../views/Demo.vue"),
+        name: 'loading',
+        component: () => import ("../views/Loading.vue"),
         meta: {title: '测试'}
     },
     {

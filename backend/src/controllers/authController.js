@@ -1,5 +1,5 @@
 import bcrypt from "bcryptjs"
-import { createUser, findUserById, findUserByRefreshToken, findUserByUsername, updateUserRefreshToken, updateUserRefreshTokenAndVersion, updateUserTokenVersion, updateUserLastLoginTime } from '../models/userModel.js'
+import { createUser, useListUsers, findUserById, findUserByRefreshToken, findUserByUsername, updateUserRefreshToken, updateUserRefreshTokenAndVersion, updateUserTokenVersion, updateUserLastLoginTime } from '../models/userModel.js'
 import { errorFormat, responseFormat } from "../utils/responseFormat.js"
 import jwt from 'jsonwebtoken'
 
@@ -84,29 +84,22 @@ const login = async (req, res) => {
         if (validationErrors.length > 0) {
             return res.status(400).json(errorFormat(400, validationErrors.join(', '), null))
         }
-        
         //查找用户，将数据库中用户信息赋值到对象user上
         const user = await findUserByUsername(username.trim())
-        console.log(user);
-        
         // 统一错误信息，避免用户名枚举攻击
         if(!user){
             return res.status(401).json(responseFormat(401, '用户名或密码错误', null))
         }
-
         //验证密码
         const isPasswordValid = await bcrypt.compare(password, user.password)
 
         if(!isPasswordValid){
             return res.status(401).json(responseFormat(401, '用户名或密码错误', null))
         }
-
         // 生成新的token版本（使用递增版本号，避免int范围问题）
         var currentVersion = user.tokenVersion || 0
         currentVersion > 8 ? currentVersion = 0 : currentVersion = currentVersion
-        
         const tokenVersion = currentVersion + 1
-        
         //密码正确，生成JWT令牌
         const token = jwt.sign(
             {userId: user.id, username: user.username,role: user.role, status:user.status, tokenVersion},
@@ -150,19 +143,34 @@ const login = async (req, res) => {
         }))
     }
 }
+//获取用户列表
+const listUsers = async (req, res) => {
+    //从url中解析分页查询的页码和大小
+    const page = req.query.page || 1
+    const size = req.query.size || 5
+    //验证refreshtoken的有效性
+    try {
+        const refreshToken = req.cookies.refreshToken
+        const user = await findUserByRefreshToken(refreshToken)
+        if(user){
+            const user =  jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET)
+            if(user.role == 'admin' && user.status == 'active'){
+                const userList = await useListUsers(page, size)
+                return res.status(200).json(responseFormat(200, '获取成功', userList))
+            }
+            return res.status(401).json(responseFormat(401, '权限不足'))
+        }
+    } catch (error){
+        console.error('获取用户列表失败', error)
+        return res.status(500).json(responseFormat(500, '获取失败'))
+    }
+}
 
 // 令牌刷新接口
 const refreshToken = async (req, res) => {
-    console.log('@@@@@@@', '即将进行token刷新')
     try{
-        console.log('3请求的req.cookies：',req.cookies)
-
         // 从cookie中获取refreshToken，而不是请求体
         const refreshToken = req.cookies.refreshToken;
-
-        console.log('refreshToken是', refreshToken)
-        
-
         if(!refreshToken){
             return res.status(401).json(responseFormat(401, '未提供刷新令牌', null))
         }
@@ -232,7 +240,7 @@ const refreshToken = async (req, res) => {
             
     }catch(error){
         console.error('刷新令牌失败', error)
-        res.status(500).json(responseFormat(500, '服务器错误', null))
+        res.status(500).json(responseFormat(500, '服务器错误'))
     }
 }
 
@@ -284,7 +292,6 @@ const getUserProfile = async (req, res) => {
         if(!user){
             return res.status(404).json(responseFormat(404, '用户不存在', null))
         }
-        
         // 明确指定返回的字段，避免敏感信息泄露
         const userInfo = {
             id: user.id,
@@ -298,8 +305,6 @@ const getUserProfile = async (req, res) => {
             lastLoginTime: user.lastLoginTime,
             status: user.status
         }
-        console.log('userInfo：+00',userInfo);
-        
         //返回用户信息
         res.json(responseFormat(200, '获取成功', userInfo))
     } catch(error){
@@ -309,4 +314,4 @@ const getUserProfile = async (req, res) => {
 }
 
 
-export {register, login, getUserProfile, refreshToken, logout, logoutAllDevices}
+export {register, login, listUsers, getUserProfile, refreshToken, logout, logoutAllDevices}

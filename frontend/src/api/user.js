@@ -28,7 +28,15 @@ const getUserProfile = async() => {
         throw error
     }
 }
-
+// 获取用户列表
+const getUserList = async() => {
+    try {
+        const result = await service.get('/profile')
+        return result.data
+    } catch(error) {
+        throw error
+    }
+}
 //刷新token
 const refreshToken = async() => {
     try {

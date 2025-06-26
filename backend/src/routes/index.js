@@ -1,7 +1,7 @@
 import express from "express"
 const router = express.Router()
 import bcrypt, { hash } from 'bcryptjs'
-import { register, login, getUserProfile, refreshToken, logout, logoutAllDevices } from "../controllers/authController.js"
+import { register, login, getUserProfile, listUsers, refreshToken, logout, logoutAllDevices } from "../controllers/authController.js"
 import { authMiddleware } from "../middleware/authMiddleware.js"
 import { rateLimitMiddleware } from "../middleware/rateLimitMiddleware.js"
 
@@ -15,6 +15,7 @@ router.post('/refreshToken', refreshToken)
 router.post('/logout', authMiddleware, logout)
 router.post('/logout-all', authMiddleware, logoutAllDevices)
 router.get('/profile', authMiddleware, getUserProfile)
+router.get('/listUsers', listUsers)
 
 
 router.get('/test', (req, res) => {

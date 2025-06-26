@@ -8,7 +8,7 @@ const createUser = async (userData) => {
     return result
 }
 //列出所有用户
-const listUsers = async (page = 1, pageSize = 5) => {
+const useListUsers = async (page = 1, pageSize = 5) => {
     try {
         const offset = (page - 1) * pageSize
         const query = 'SELECT * FROM users LIMIT ? OFFSET ?'
@@ -115,5 +115,5 @@ const findUserByRefreshToken = async (refreshToken) => {
     return result[0]
 }
 //将创建用户、查找用户...功能导出
-export { createUser, listUsers, findUserByUsername, findUserByEmail,findUserById, findUserByRole, findUserByNickname, findUserByPhone, updateUserRefreshToken, findUserByRefreshToken, updateUserTokenVersion, updateUserRefreshTokenAndVersion, updateUserLastLoginTime }
+export { createUser, useListUsers, findUserByUsername, findUserByEmail,findUserById, findUserByRole, findUserByNickname, findUserByPhone, updateUserRefreshToken, findUserByRefreshToken, updateUserTokenVersion, updateUserRefreshTokenAndVersion, updateUserLastLoginTime }
 
