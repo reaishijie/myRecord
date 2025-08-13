@@ -1,5 +1,6 @@
 import service from './request'
 import { clearAuth } from '../utils/auth';
+import { showSuccess } from '../utils/message';
 
 //注册
 const register = async (userInfo) => {
@@ -56,6 +57,8 @@ const logout = async() => {
         const result = await service.post('/logout')
         // 清除本地存储的token和用户信息
         clearAuth();
+        showSuccess('退出登陆成功！')
+        console.log('result.data: ' ,result.data)
         return result.data
     } catch(error) {
         // 即使后端请求失败，也清除本地存储

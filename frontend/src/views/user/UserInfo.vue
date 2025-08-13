@@ -38,7 +38,7 @@
             <el-button type="primary">编辑资料</el-button>
             <el-button type="warning">修改密码</el-button>
             <el-button type="info">消息中心</el-button>
-            <el-button type="danger">注销账户</el-button>
+            <el-button type="danger" @click="handleLogout">注销账户</el-button>
           </div>
         </div>
       </el-card>
@@ -69,8 +69,16 @@
 </template>
 
 <script setup>
-import { reactive, onMounted } from 'vue';
+import { reactive, onMounted, handleError } from 'vue';
 import { getUserProfile } from '../../api/user';
+import { logout } from '../../api/user';
+import { useRouter } from 'vue-router';
+const router = useRouter()
+
+const handleLogout = async() => {
+  await logout()
+  router.push({name: 'login'})
+}
 
 const userInfo = reactive({
   data: {

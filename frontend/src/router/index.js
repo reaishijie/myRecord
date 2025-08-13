@@ -59,6 +59,7 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
     document.title = to.meta.title || '默认标题'
     const token = getToken()
+    
     //需要鉴权的页面并且没有token
     if(to.meta.requireAuth && !token){
         next({ name: 'login'})

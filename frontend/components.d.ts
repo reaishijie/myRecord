@@ -9,6 +9,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     ElAvatar: typeof import('element-plus/es')['ElAvatar']
+    ElButten: typeof import('element-plus/es')['ElButten']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCard: typeof import('element-plus/es')['ElCard']
     ElDescriptions: typeof import('element-plus/es')['ElDescriptions']
@@ -23,11 +24,11 @@ declare module 'vue' {
     ElTable: typeof import('element-plus/es')['ElTable']
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
     ElTag: typeof import('element-plus/es')['ElTag']
-    Footer: typeof import('./src/components/Footer.vue')['default']
+    Footer: typeof import('./src/components/layout/Footer.vue')['default']
     Header: typeof import('./src/components/Header.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    Sider: typeof import('./src/components/Sider.vue')['default']
+    Sider: typeof import('./src/components/layout/Sider.vue')['default']
     VditorEditor: typeof import('./src/components/VditorEditor.vue')['default']
     VditorSimple: typeof import('./src/components/VditorSimple.vue')['default']
     VditorTest: typeof import('./src/components/VditorTest.vue')['default']
